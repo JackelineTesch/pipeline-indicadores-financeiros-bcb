@@ -23,6 +23,21 @@ def executar_pipeline():
     # Etapa 3 - Carga
     carregar(df_processed)
 
+    # ETAPA 4 — Exportar CSVs
+    import os
+    os.makedirs("data/processed", exist_ok=True)
+
+    # CSV para o Streamlit Cloud
+    caminho_streamlit = "data/processed/indicadores_atual.csv"
+    df_processed.to_csv(caminho_streamlit, index=False, encoding="utf-8")
+    print(f"\n💾 CSV Streamlit exportado: {caminho_streamlit}")
+
+    # CSV para o Power BI
+    caminho_powerbi = "data/processed/indicadores_powerbi.csv"
+    df_processed.to_csv(caminho_powerbi, index=False, encoding="utf-8-sig",
+                        float_format="%.6f")
+    print(f"💾 CSV Power BI exportado: {caminho_powerbi}")
+
     fim = datetime.now()
     duracao = (fim - inicio).seconds
 

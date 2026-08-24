@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Dados
+data/raw/
+data/processed/*
+!data/processed/indicadores_atual.csv
+*.duckdb
