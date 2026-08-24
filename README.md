@@ -93,7 +93,7 @@ API BACEN (SGS)
 
 ```bash
 # Clone o repositório
-git clone https://github.com/SEU_USUARIO/pipeline-indicadores-financeiros-bcb.git
+git clone https://github.com/JackelineTesch/pipeline-indicadores-financeiros-bcb.git
 cd pipeline-indicadores-financeiros-bcb
 
 # Crie e ative o ambiente virtual
