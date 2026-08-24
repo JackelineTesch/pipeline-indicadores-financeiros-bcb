@@ -1,16 +1,10 @@
 # app.py
 
 import streamlit as st
-import duckdb
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
-
-DB_PATH = os.getenv("DB_PATH", "data/processed/indicadores.duckdb")
 
 # ── Configuração da página ──────────────────────────────────────────
 st.set_page_config(
@@ -43,11 +37,10 @@ st.markdown("""
 
 
 # ── Carregar dados ──────────────────────────────────────────────────
-@st.cache_data
+@st.cache_data(ttl=3600)  # atualiza o cache a cada 1 hora
 def carregar_dados():
-    conn = duckdb.connect(DB_PATH, read_only=True)
-    df = conn.execute("SELECT * FROM indicadores").df()
-    conn.close()
+    url = "https://raw.githubusercontent.com/JackelineTesch/pipeline-indicadores-financeiros-bcb/main/data/processed/indicadores_atual.csv"
+    df = pd.read_csv(url)
     df["data"] = pd.to_datetime(df["data"])
     return df
 
