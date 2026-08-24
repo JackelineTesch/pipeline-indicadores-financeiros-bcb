@@ -78,7 +78,7 @@ API BACEN (SGS)
 
 | Ferramenta | Tipo | Público-alvo | Link |
 |---|---|---|---|
-| Power BI | Dashboard executivo corporativo | Diretoria e gestores financeiros | Em breve |
+| Power BI | Dashboard executivo corporativo | Diretoria e gestores financeiros | [📄 Ver dashboard](dashboard_indicadores.pdf) |
 | Streamlit | Aplicação interativa de análise | Analistas e equipes técnicas | Em breve |
 
 ---
