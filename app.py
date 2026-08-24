@@ -142,6 +142,13 @@ df_filtrado = df[
 
 # ── Gráfico de linha: Evolução histórica ───────────────────────────
 if not df_filtrado.empty:
+
+    # Opção de sobrepor média móvel
+    mostrar_media_movel = st.toggle(
+        "📈 Sobrepor Média Móvel 30 dias",
+        value=True
+    )
+
     fig_linha = px.line(
         df_filtrado,
         x="data",
@@ -151,6 +158,19 @@ if not df_filtrado.empty:
         labels={"data": "Data", "valor": "Valor", "indicador": "Indicador"},
         template="plotly_dark"
     )
+
+    # Adiciona média móvel apenas para IPCA (único onde é visualmente relevante)
+    if mostrar_media_movel and "ipca" in codigos_selecionados:
+        df_ipca = df_filtrado[df_filtrado["indicador"] == "ipca"].copy()
+        fig_linha.add_scatter(
+            x=df_ipca["data"],
+            y=df_ipca["media_movel_30d"],
+            mode="lines",
+            line=dict(dash="dash", width=1.5, color="#FFD700"),
+            name="IPCA (MM30)",
+            opacity=0.8
+        )
+
     fig_linha.update_layout(
         height=400,
         legend_title="Indicador",
@@ -159,6 +179,46 @@ if not df_filtrado.empty:
     st.plotly_chart(fig_linha, use_container_width=True)
 else:
     st.warning("Nenhum indicador selecionado.")
+
+# ── Gráfico de variação acumulada anual ───────────────────────────
+st.markdown("### 📉 Variação Acumulada por Ano")
+
+df_var_anual = (
+    df_filtrado.groupby(["ano", "indicador"])["valor"]
+    .agg(["first", "last"])
+    .reset_index()
+)
+df_var_anual["variacao_anual_pct"] = (
+    (df_var_anual["last"] - df_var_anual["first"])
+    / df_var_anual["first"] * 100
+).round(2)
+
+fig_var_anual = px.bar(
+    df_var_anual,
+    x="ano",
+    y="variacao_anual_pct",
+    color="indicador",
+    barmode="group",
+    title="Variação Acumulada Anual por Indicador (%)",
+    labels={
+        "ano": "Ano",
+        "variacao_anual_pct": "Variação (%)",
+        "indicador": "Indicador"
+    },
+    template="plotly_dark"
+)
+fig_var_anual.update_layout(
+    height=350,
+    legend_title="Indicador",
+    hovermode="x unified"
+)
+fig_var_anual.add_hline(
+    y=0,
+    line_dash="dash",
+    line_color="white",
+    opacity=0.3
+)
+st.plotly_chart(fig_var_anual, use_container_width=True)
 
 # ── Gráficos lado a lado ───────────────────────────────────────────
 col_g1, col_g2 = st.columns(2)
